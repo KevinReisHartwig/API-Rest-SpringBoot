@@ -1,5 +1,6 @@
 package med.voll.api.controller;
 
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.validation.Valid;
 import med.voll.api.domain.medico.*;
 import med.voll.api.domain.repository.MedicoRepository;
@@ -15,11 +16,11 @@ import org.springframework.web.util.UriComponentsBuilder;
 
 @RestController
 @RequestMapping("medicos")
+@SecurityRequirement(name = "bearer-key")
 public class MedicoController {
 
     @Autowired
     private MedicoRepository repository;
-
 
     @PostMapping
     @Transactional
@@ -47,21 +48,20 @@ public class MedicoController {
         return ResponseEntity.ok(new DadosDetalhamentoMedico(medico));
     }
 
-    @DeleteMapping("{id}")
+    @DeleteMapping("/{id}")
     @Transactional
-    public ResponseEntity excluir(@PathVariable long id){
+    public ResponseEntity excluir(@PathVariable Long id) {
         var medico = repository.getReferenceById(id);
         medico.excluir();
 
         return ResponseEntity.noContent().build();
     }
 
-    @GetMapping("{id}")
-    @Transactional
-    public ResponseEntity detalhar(@PathVariable long id){
+    @GetMapping("/{id}")
+    public ResponseEntity detalhar(@PathVariable Long id) {
         var medico = repository.getReferenceById(id);
-
         return ResponseEntity.ok(new DadosDetalhamentoMedico(medico));
     }
+
 
 }
